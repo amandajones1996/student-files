@@ -10,6 +10,8 @@ const gallery = document.getElementById('gallery');
 // users list
 let usersList = []
 
+let currentUserIndex = 0;
+
 // add search bar elements
 searchBar.insertAdjacentHTML('beforeend', ` <form action="#" method="get">
 <input type="search" id="search-input" class="search-input" placeholder="Search...">
@@ -140,6 +142,7 @@ function createModalElement(user){
 // display user modal
 function displayModalElement(user){
     console.log('USER', user)
+    currentUserIndex = currentIndex(user)
     const displayModal = createModalElement(user)
     gallery.insertAdjacentHTML('beforeend', displayModal)
 
@@ -147,7 +150,29 @@ function displayModalElement(user){
     const closeButton = document.querySelector('.modal-close-btn');
         closeButton.addEventListener('click', () => {
         gallery.lastElementChild.remove()
-})
+    })
+
+    // Event listener for the "modal-prev btn"
+    const prevButton = document.querySelector('.modal-prev.btn');
+    prevButton.addEventListener('click', () => {
+        console.log("current index in prev btn listener",currentUserIndex)
+        if (currentUserIndex - 1 >= 0) {
+            currentUserIndex--;
+            console.log("current index in prev btn listener after decrease",currentUserIndex)
+            displayCurrentModal();
+        }
+    });
+
+    // Event listener for the "modal-next btn"
+    const nextButton = document.querySelector('.modal-next.btn');
+    nextButton.addEventListener('click', () => {
+        console.log("current index in next btn listener",currentUserIndex)
+        if (currentUserIndex + 1 <= usersList.length) {
+            currentUserIndex++;
+            console.log("current index in next btn listener after increase",currentUserIndex)
+            displayCurrentModal();
+        }
+    });
 }
 
 // event listener for gallery 
@@ -170,31 +195,14 @@ gallery.addEventListener("click", (e) =>{
     displayModalElement(matchedUser)
 });
 
-let currentUserIndex = 0;
+// index of current user
+function currentIndex(user){
+    return usersList.indexOf(user)
+}
 
 // function to display the current user in the modal
 function displayCurrentModal() {
+    console.log("current index in display current modal function",currentUserIndex)
     const user = usersList[currentUserIndex];
     displayModalElement(user);
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Event listener for the "modal-prev btn"
-    const prevButton = document.querySelector('.modal-prev.btn');
-    prevButton.addEventListener('click', () => {
-        if (currentUserIndex > 0) {
-            currentUserIndex--;
-            displayCurrentModal();
-        }
-    });
-
-    // Event listener for the "modal-next btn"
-    const nextButton = document.querySelector('.modal-next.btn');
-    nextButton.addEventListener('click', () => {
-        if (currentUserIndex < usersList.length - 1) {
-            currentUserIndex++;
-            displayCurrentModal();
-        }
-    });
-})
-
