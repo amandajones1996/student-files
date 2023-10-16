@@ -172,7 +172,7 @@ function displayModalElement(user){
     const nextButton = document.querySelector('.modal-next.btn');
     nextButton.addEventListener('click', () => {
         console.log("current index in next btn listener",currentUserIndex)
-        if (currentUserIndex + 1 <= usersList.length) {
+        if (currentUserIndex + 1 < usersList.length) {
             currentUserIndex++;
             console.log("current index in next btn listener after increase",currentUserIndex)
             displayCurrentModal();
