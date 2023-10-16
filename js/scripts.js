@@ -141,6 +141,11 @@ function createModalElement(user){
 
 // display user modal
 function displayModalElement(user){
+    // remove last modal that was created
+    const existingModal = document.querySelector('.modal-container');
+    if(existingModal) {
+        existingModal.remove();
+    }
     console.log('USER', user)
     currentUserIndex = currentIndex(user)
     const displayModal = createModalElement(user)
