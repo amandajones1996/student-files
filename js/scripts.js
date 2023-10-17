@@ -31,13 +31,6 @@ function searchUsers(){
     const searchValue = searchInput.value.toLowerCase();
     const filterList = [];
 
-    // const filteredUsers = usersList.filter(user => {
-    //     const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
-    //     if(fullName.includes(searchValue)){
-    //         filterList.push(user)
-    //     }
-    // });
-
     // iterate over user list and check if search value is found in list
     for(let i = 0; i < usersList.length; i++){
         const fullName = `${usersList[i].name.first.toLowerCase()} ${usersList[i].name.last.toLowerCase()}`
@@ -59,9 +52,8 @@ async function getRandUsers(){
     try {
         const response = await fetch(url)
         const usersJson = await response.json()
-        console.log(usersJson.results)
+    
         usersList = usersJson.results
-        console.log('users list', usersList)
         displayUsers(usersJson.results)
     } catch(e) {
         throw e
@@ -91,26 +83,20 @@ function createUserHtml(user){
 
 getRandUsers();
 
-// create birthday 
+// create birthday("1981-08-27T13:31:26.063Z");
 function birthday(dob){
     const birthdayParts = dob.split(/[-T]/)
     const year = birthdayParts[0].substring(2)
     const month = birthdayParts[1]
     const day = birthdayParts[2].split('T')[0]
-    console.log(birthdayParts)
     
-    console.log(month)
-    console.log(day)
-    console.log(year)
     const formatedBirthday = month + "/" + day + "/" + year
-    console.log(formatedBirthday)
     return formatedBirthday
 }
-// birthday("1981-08-27T13:31:26.063Z");
+
 
 // create address
 function address(user){
-    console.log('user in address', user)
     return `${user.location.street.number} ${user.location.street.name}, ${user.location.city}, ${user.location.state} ${user.location.postcode}`
 }
 
@@ -146,7 +132,6 @@ function displayModalElement(user){
     if(existingModal) {
         existingModal.remove();
     }
-    console.log('USER', user)
     currentUserIndex = currentIndex(user)
     const displayModal = createModalElement(user)
     gallery.insertAdjacentHTML('beforeend', displayModal)
@@ -160,10 +145,8 @@ function displayModalElement(user){
     // Event listener for the "modal-prev btn"
     const prevButton = document.querySelector('.modal-prev.btn');
     prevButton.addEventListener('click', () => {
-        console.log("current index in prev btn listener",currentUserIndex)
         if (currentUserIndex - 1 >= 0) {
             currentUserIndex--;
-            console.log("current index in prev btn listener after decrease",currentUserIndex)
             displayCurrentModal();
         }
     });
@@ -171,10 +154,8 @@ function displayModalElement(user){
     // Event listener for the "modal-next btn"
     const nextButton = document.querySelector('.modal-next.btn');
     nextButton.addEventListener('click', () => {
-        console.log("current index in next btn listener",currentUserIndex)
         if (currentUserIndex + 1 < usersList.length) {
             currentUserIndex++;
-            console.log("current index in next btn listener after increase",currentUserIndex)
             displayCurrentModal();
         }
     });
@@ -183,20 +164,18 @@ function displayModalElement(user){
 // event listener for gallery 
 gallery.addEventListener("click", (e) =>{
     const cardPicked = e.target.closest('.card')
+    // return so no null error
     if(!cardPicked){
-        //   Cannot read properties of null (reading 'querySelector') at line 121. occuring after closing modal button - reach out for help?
         return 
     }
-    console.log(cardPicked)
+
     const userSelected = cardPicked.querySelector("#name").textContent
-    console.log(userSelected)
-    console.log("users list 2", usersList)
     const matchedUser = usersList.find(user => {
         if(userSelected.includes(user.name.first) && userSelected.includes(user.name.last)){
             return user
         }
     })
-    console.log('matched user', matchedUser)
+    
     displayModalElement(matchedUser)
 });
 
@@ -207,7 +186,6 @@ function currentIndex(user){
 
 // function to display the current user in the modal
 function displayCurrentModal() {
-    console.log("current index in display current modal function",currentUserIndex)
     const user = usersList[currentUserIndex];
     displayModalElement(user);
 }
